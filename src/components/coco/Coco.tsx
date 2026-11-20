@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 
 /**
- * CoCo, the Cortex Code penguin, in pixels. Front poses and palette are ported
+ * CoCo, the CoCo Desktop penguin, in pixels. Front poses and palette are ported
  * from the Desktop app's CocoPenguinSprite; the sled pose is drawn here in the
  * same grid style. Every sprite is decorative (aria-hidden) and stands still
  * under prefers-reduced-motion.

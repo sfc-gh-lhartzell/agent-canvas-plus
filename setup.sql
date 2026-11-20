@@ -1,5 +1,5 @@
 -- =============================================================================
--- Agent Canvas — Snowflake setup
+-- Agent Canvas Plus — Snowflake setup
 -- =============================================================================
 -- Run this once in your Snowflake account to create every object the app
 -- needs. Run as ACCOUNTADMIN or a role with equivalent privileges.
@@ -10,15 +10,22 @@
 --   AGENT_CANVAS_PLUS                Database with two schemas:
 --     PUBLIC.CANVASES            Thread-ID mapping table (app plumbing)
 --     AGENTS.TPCH_REV_SV         Semantic view over TPC-H sample data
---     AGENTS.CANVAS_AGENT        Cortex Agent with five tools
+--     AGENTS.CANVAS_AGENT        Cortex Agent (Luke) with document, SQL-proposal, and code tools
 --   SNOWFLAKE_DOCUMENTATION    Installed from Marketplace listing GZSTZ67BY9OQ4
 --   SNOWFLAKE_SAMPLE_DATA      Mounted from the sample data share if missing
+--
+-- Usage tracking: this script tags the objects it creates with an anonymous
+-- JSON comment and sets a session query tag (origin sf_sit-is), the same
+-- convention Snowflake quickstarts use, so the authors can count deployments.
+-- No data leaves your account. Delete section 6b and the ALTER SESSION line
+-- below to opt out.
 --
 -- After this runs:
 --   snow app deploy
 -- =============================================================================
 
 USE ROLE ACCOUNTADMIN;
+ALTER SESSION SET QUERY_TAG = '{"origin":"sf_sit-is","name":"oss-agent-canvas-plus","version":{"major":1,"minor":0},"attributes":{"is_quickstart":1,"source":"sql"}}';
 
 -- -----------------------------------------------------------------------------
 -- 1. Role, warehouse, database, schemas
@@ -422,7 +429,7 @@ $$;
 -- 5. Cortex Agent
 -- -----------------------------------------------------------------------------
 CREATE OR REPLACE AGENT AGENT_CANVAS_PLUS.AGENTS.CANVAS_AGENT
-  COMMENT = 'Agent Canvas demo agent — routes TPC-H revenue questions to Analyst, Snowflake documentation questions to Search, visualizes with Data to Chart, and uses web search for context.'
+  COMMENT = '{"origin":"sf_sit-is","name":"oss-agent-canvas-plus","version":{"major":1,"minor":0},"attributes":{"is_quickstart":1,"source":"sql"}}'
   PROFILE = '{"display_name": "Luke", "color": "blue"}'
   FROM SPECIFICATION
   $$
@@ -705,6 +712,20 @@ GRANT SELECT, INSERT ON TABLE AGENT_CANVAS_PLUS.PUBLIC.CANVAS_CONTEXT
 -- Grant AGENT_CANVAS_PLUS_ROLE to ACCOUNTADMIN so the SPCS service's inherited
 -- role chain can downgrade to it via the X-Snowflake-Role header.
 GRANT ROLE AGENT_CANVAS_PLUS_ROLE TO ROLE ACCOUNTADMIN;
+
+-- -----------------------------------------------------------------------------
+-- 6b. Usage tag (anonymous deployment count; see the header to opt out)
+-- -----------------------------------------------------------------------------
+ALTER DATABASE AGENT_CANVAS_PLUS SET COMMENT = '{"origin":"sf_sit-is","name":"oss-agent-canvas-plus","version":{"major":1,"minor":0},"attributes":{"is_quickstart":1,"source":"sql"}}';
+ALTER WAREHOUSE AGENT_CANVAS_PLUS_WH SET COMMENT = '{"origin":"sf_sit-is","name":"oss-agent-canvas-plus","version":{"major":1,"minor":0},"attributes":{"is_quickstart":1,"source":"sql"}}';
+ALTER ROLE AGENT_CANVAS_PLUS_ROLE SET COMMENT = '{"origin":"sf_sit-is","name":"oss-agent-canvas-plus","version":{"major":1,"minor":0},"attributes":{"is_quickstart":1,"source":"sql"}}';
+ALTER SCHEMA AGENT_CANVAS_PLUS.AGENTS SET COMMENT = '{"origin":"sf_sit-is","name":"oss-agent-canvas-plus","version":{"major":1,"minor":0},"attributes":{"is_quickstart":1,"source":"sql"}}';
+ALTER SCHEMA AGENT_CANVAS_PLUS.PUBLIC SET COMMENT = '{"origin":"sf_sit-is","name":"oss-agent-canvas-plus","version":{"major":1,"minor":0},"attributes":{"is_quickstart":1,"source":"sql"}}';
+ALTER SCHEMA AGENT_CANVAS_PLUS.SANDBOX SET COMMENT = '{"origin":"sf_sit-is","name":"oss-agent-canvas-plus","version":{"major":1,"minor":0},"attributes":{"is_quickstart":1,"source":"sql"}}';
+ALTER TABLE AGENT_CANVAS_PLUS.PUBLIC.CANVASES SET COMMENT = '{"origin":"sf_sit-is","name":"oss-agent-canvas-plus","version":{"major":1,"minor":0},"attributes":{"is_quickstart":1,"source":"sql"}}';
+ALTER TABLE AGENT_CANVAS_PLUS.PUBLIC.CANVAS_CONTEXT SET COMMENT = '{"origin":"sf_sit-is","name":"oss-agent-canvas-plus","version":{"major":1,"minor":0},"attributes":{"is_quickstart":1,"source":"sql"}}';
+ALTER TABLE AGENT_CANVAS_PLUS.PUBLIC.DOCS SET COMMENT = '{"origin":"sf_sit-is","name":"oss-agent-canvas-plus","version":{"major":1,"minor":0},"attributes":{"is_quickstart":1,"source":"sql"}}';
+ALTER TABLE AGENT_CANVAS_PLUS.PUBLIC.PENDING_ACTIONS SET COMMENT = '{"origin":"sf_sit-is","name":"oss-agent-canvas-plus","version":{"major":1,"minor":0},"attributes":{"is_quickstart":1,"source":"sql"}}';
 
 -- -----------------------------------------------------------------------------
 -- 7. Sanity checks (optional — uncomment to verify)

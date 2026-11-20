@@ -2,7 +2,7 @@
 
 ![Agent Canvas Plus: a shared brief with tracked suggestions from Luke, a comment thread, and the room chat.](assets/canvas_plus.jpg)
 
-A fork of [Agent Canvas](https://github.com/Snowflake-Labs/snowflake-multiplayer-ai-canvas). The original is a shared chat room with a Cortex Agent. This fork adds the things a team actually builds in that room: **documents, slide decks, and artifacts** that everyone edits live, with comments, tracked suggestions, autosave, and version history. The agent, **Luke**, can write and review those documents, run Python, and propose SQL writes that only run after a teammate approves them. Everything runs in Snowflake, next to the data.
+Built on [Agent Canvas](https://github.com/Snowflake-Labs/snowflake-multiplayer-ai-canvas) by Gilberto Hernandez. The original is a shared chat room with a Cortex Agent. This fork adds the things a team actually builds in that room: **documents, slide decks, and artifacts** that everyone edits live, with comments, tracked suggestions, autosave, and version history. The agent, **Luke**, can write and review those documents, run Python, and propose SQL writes that only run after a teammate approves them. Everything runs in Snowflake, next to the data.
 
 ## What's new in Plus
 
@@ -37,6 +37,8 @@ Luke is a Cortex Agent called through the [Cortex Agent SDK](https://www.npmjs.c
 ## Run it locally (two teammates in two tabs)
 
 ```sh
+git clone https://github.com/sfc-gh-lhartzell/agent-canvas-plus.git
+cd agent-canvas-plus
 npm ci
 
 # Creates every Snowflake object (setup.sql), a key-pair SERVICE user that local
@@ -84,6 +86,10 @@ Open the printed URL and use **Invite others**. The service bills while running 
     ├── editor/                  # RichEditor, CodeArtifactEditor, suggest mode, comments, slides, history
     └── lib/                     # agent-turn (tool handling), doc-hub (live docs), docs-store, y-provider, …
 ```
+
+## Usage tracking
+
+`setup.sql` tags the objects it creates with an anonymous JSON comment and sets a session query tag (`origin: sf_sit-is`), the convention Snowflake quickstarts use to count deployments. No data leaves your account. To opt out, delete section 6b and the `ALTER SESSION SET QUERY_TAG` line in `setup.sql`.
 
 ## License
 

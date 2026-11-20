@@ -25,7 +25,7 @@ Built on [Agent Canvas](https://github.com/Snowflake-Labs/snowflake-multiplayer-
 Luke is a Cortex Agent called through the [Cortex Agent SDK](https://www.npmjs.com/package/@snowflake/cortex-agent-sdk). Its document tools are thin Snowflake procedures that log the call to `AI_OPS` and acknowledge it. The real change happens in the app: the server watches Luke's event stream, and when a `tool_use` arrives it creates the document, queues the edit for the open editors, or records the SQL proposal. That keeps every document a single collaborative source of truth instead of something the agent overwrites.
 
 - **Edits and comments** are queued per document. The first open editor claims each one and applies it as tracked suggestions attributed to Luke; the Yjs sync carries it to everyone else. If nobody has the document open, the edit waits.
-- **`propose_sql` never runs anything.** It stores the statement in `PENDING_ACTIONS` and shows an approval card to the whole room. **Approve & run** executes it (deployed: under the approver's own role via caller's rights; local dev: the dev service user's role), and the result or error posts back to the room. Account, role, user, and grant statements are blocked, and only one statement runs per approval.
+- **`propose_sql` never runs anything.** It stores the statement in `PENDING_ACTIONS` and shows an approval card to the whole room. **Approve & run** executes it, and the result or error posts back to the room. Account, role, user, and grant statements are blocked, and only one statement runs per approval.
 - **`code_execution`** is Snowflake's sandboxed Python tool with `permission_policy: always_ask`. When Snowflake decides a call needs approval, the turn pauses and the room sees an approval card; the decision resumes the turn.
 
 ## Prerequisites
@@ -66,7 +66,7 @@ Open the printed URL and use **Invite others**. The service bills while running 
 - **Suggest mode is intentionally simple.** Typing, deleting, and pasting are tracked. Formatting changes, new paragraphs (Enter), and table structure edits apply directly. Code artifacts don't have suggest mode; Luke edits them directly.
 - **Luke's edits apply in the browser.** An edit waits until someone has that document open; it then lands as a suggestion for everyone.
 - **Comments on artifacts** are document-level, not anchored to a line.
-- **Agent calls run under the app role** (`AGENT_CANVAS_PLUS_ROLE`), as in the original. Only approved SQL runs under the approver's role, and only when deployed.
+- **Agent calls run under the app role** (`AGENT_CANVAS_PLUS_ROLE`), as in the original.
 - **Code execution approval** depends on Snowflake classifying a call as state-changing. Pure computation runs without a prompt.
 - One canvas (`main`) in the stock UI; `/canvas/<id>` works for others.
 

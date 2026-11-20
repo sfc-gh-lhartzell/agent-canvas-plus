@@ -59,7 +59,7 @@ export function SqlApprovalCard({ action }: { action: SqlActionView }) {
         {pending ? (
           <>
             <p className="mb-2 flex items-center gap-1.5 text-[11.5px] text-[color:var(--color-text-muted)]">
-              <ShieldCheck className="h-3.5 w-3.5" /> Nothing has run. Any teammate can approve; it runs under the approver&apos;s role when deployed.
+              <ShieldCheck className="h-3.5 w-3.5" /> Nothing has run. Any teammate can approve it.
             </p>
             <div className="flex gap-2">
               <button type="button" disabled={busy} onClick={() => decide("approve")} className="neu-accent inline-flex h-8 items-center gap-1.5 rounded-full px-4 text-[12.5px] font-semibold disabled:opacity-60">
